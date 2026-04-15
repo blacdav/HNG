@@ -16,7 +16,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/classify", async (req, res) => {
+app.get("/api/classify", async (req, res) => {
     const { name } = req.query;
 
     if (!name) {
