@@ -34,7 +34,7 @@ Profile.init({
         allowNull: false
     },
     age_group: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM("child", "teenager", "adult", "senior"),
         allowNull: false
     },
     country_id: {
