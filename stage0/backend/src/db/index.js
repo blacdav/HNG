@@ -5,8 +5,9 @@ export const sequelize = new Sequelize(dbConfig.name, dbConfig.user, dbConfig.pa
     host: dbConfig.host,
     port: dbConfig.port,
     dialect: dbConfig.dialect,
-    ssl: {
-        ca: dbConfig.ssl
-    },
+    dialectOptions: dbConfig.ssl,
+    // ssl: {
+    //     ca: dbConfig.ssl
+    // },
     logging: true
 });
