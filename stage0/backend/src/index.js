@@ -16,18 +16,20 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(async (req, res, next) => {
-    // const ip = req.ip;
+dbConn();
 
-    try {
-        await dbConn();
+// app.use(async (req, res, next) => {
+//     // const ip = req.ip;
+
+//     try {
+//         await dbConn();
         
-        // console.log(ip)
-        return next();
-    } catch (err) {
-        return next(err);
-    }
-})
+//         // console.log(ip)
+//         return next();
+//     } catch (err) {
+//         return next(err);
+//     }
+// })
 
 app.use('/api', router);
 

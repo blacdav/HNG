@@ -39,6 +39,27 @@ export const CreateProfile = async (req, res) => {
             nationalize(name)
         ])
 
+        if (!g.gender || g.count === 0) {
+            return res.status(502).json({
+                status: "false",
+                message: "Genderize API returned invalid response"
+            })
+        }
+
+        if (!a.age) {
+            return res.status(502).json({
+                status: "false",
+                message: "Agify API returned invalid response"
+            })
+        }
+
+        if (!n.country || n.country.length === 0) {
+            return res.status(502).json({
+                status: "false",
+                message: "Nationalize API returned invalid response"
+            })
+        }
+
         const age_group = a.age >= 0 && a.age <= 12 ? "child" : a.age >= 13 && a.age <= 19 ? "teenager" : a.age >= 20 && a.age <= 59 ? "adult" : "senior"
         const country_probability = Math.round(n.country[0].probability * 100) / 100
 

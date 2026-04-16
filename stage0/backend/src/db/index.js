@@ -8,5 +8,11 @@ export const sequelize = new Sequelize(dbConfig.name, dbConfig.user, dbConfig.pa
     ssl: {
         ca: dbConfig.ssl
     },
-    logging: true
+    logging: true,
+    pool: {
+        max: 10,
+        min: 1,
+        acquire: 30000,
+        idle: 10000
+    }
 });

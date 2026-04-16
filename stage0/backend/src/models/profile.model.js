@@ -1,5 +1,6 @@
 import { sequelize } from "../db/index.js";
 import { DataTypes, Model } from "sequelize";
+import { v7 as uuidv7 } from "uuid";
 
 class Profile extends Model {
     static associate(models) {}
@@ -9,7 +10,7 @@ class Profile extends Model {
 Profile.init({
     id: {
         type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        defaultValue: () => uuidv7(),
         primaryKey: true,
         allowNull: false
     },
