@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import router from "./routes/routes.js";
-import { dbConn } from "./db/config.js";
+// import { dbConn } from "./db/config.js";
 
 const app = express();
 
@@ -20,7 +20,7 @@ app.use(async (req, res, next) => {
     // const ip = req.ip;
 
     try {
-        await dbConn();
+        // await dbConn();
         
         // console.log(ip)
         return next();
