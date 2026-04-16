@@ -17,16 +17,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(async (req, res, next) => {
-    const ip = req.ip;
+    // const ip = req.ip;
 
-    // console.log(ip)
-
-    return next();
+    try {
+        await dbConn();
+        
+        // console.log(ip)
+        return next();
+    } catch (err) {
+        return next(err);
+    }
 })
 
 app.use('/api', router);
 
-dbConn();
+app.use((err, req, res, next) => {
+    console.error(err);
+
+    res.status(500).json({
+        status: "error",
+        message: "Internal Server Error"
+    })
+})
 
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
