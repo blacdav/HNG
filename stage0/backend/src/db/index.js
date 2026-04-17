@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import { dbConfig } from "../config/index.js";
+import { attachDatabasePool } from "@vercel/functions";
 import fs from "fs";
 
 const sslCa = Buffer.from(dbConfig.ssl, "base64").toString("utf-8");
@@ -20,3 +21,6 @@ export const sequelize = new Sequelize(dbConfig.name, dbConfig.user, dbConfig.pa
         idle: 10000
     }
 });
+
+// Add this to properly manage connections in serverless
+attachDatabasePool(sequelize.connectionManager.pool);
