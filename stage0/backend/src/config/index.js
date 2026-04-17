@@ -1,5 +1,5 @@
-// import { configDotenv } from "dotenv"
-// configDotenv()
+import { configDotenv } from "dotenv"
+configDotenv()
 
 export const dbConfig = {
     name: process.env.DB_NAME,
