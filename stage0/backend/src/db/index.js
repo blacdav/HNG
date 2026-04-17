@@ -1,7 +1,10 @@
+import mysql from "mysql2";
 import { Sequelize } from "sequelize";
 import { dbConfig } from "../config/index.js";
 import { attachDatabasePool } from "@vercel/functions";
 import fs from "fs";
+
+console.log("mysql2 loaded:", !!mysql);
 
 const sslCa = Buffer.from(dbConfig.ssl, "base64").toString("utf-8");
 
