@@ -27,7 +27,10 @@ export const FilterProfile = async (req, res) => {
     }
 
     try {
-        const {count, rows:profile} = await Profile.findAndCountAll({ where: filter });
+        const {count, rows:profile} = await Profile.findAndCountAll({
+            where: filter,
+            attributes: ["id", "name", "gender", "age", "age_group", "country_id"]
+        });
 
         if (!profile) {
             return res.status(404).json({
