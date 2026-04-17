@@ -26,7 +26,7 @@ export const CreateProfile = async (req, res) => {
         const profile = await Profile.findAll({ where: { name }});
 
         if (profile && profile.length > 0) {
-            return res.status(200).json({
+            return res.json({
                 status: "success",
                 message: "profile already exists",
                 data: profile
