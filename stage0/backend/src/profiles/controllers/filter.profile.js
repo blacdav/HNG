@@ -46,7 +46,7 @@ export const FilterProfile = async (req, res) => {
             count,
             data: profile
         })
-    } catch (err) {
+    } catch (err) {        
         return res.status(500).json({
             status: "error",
             message: "Something went wrong",

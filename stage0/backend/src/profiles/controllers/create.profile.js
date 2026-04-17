@@ -81,6 +81,16 @@ export const CreateProfile = async (req, res) => {
             data: t
         });
     } catch (err) {
+        if (err.name === "SequelizeUniqueConstraintError") {
+            const existing = await Profile.findOne({ where: { name } });
+
+            return res.status(200).json({
+                status: "success",
+                message: "Profile already exists",
+                data: existing
+            });
+        }
+
         console.log("Server Issue", err);
         return res.status(500).json({
             status: "error",
