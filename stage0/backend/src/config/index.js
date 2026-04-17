@@ -1,5 +1,8 @@
-// import { configDotenv } from "dotenv"
-// configDotenv()
+// this part is for serverless deployment, e.g vercel
+if (process.env.NODE_ENV !== "production") {
+  const { configDotenv } = await import("dotenv");
+  configDotenv();
+}
 
 export const dbConfig = {
     name: process.env.DB_NAME,
