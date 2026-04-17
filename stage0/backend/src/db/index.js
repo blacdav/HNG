@@ -10,7 +10,7 @@ export const sequelize = new Sequelize(dbConfig.name, dbConfig.user, dbConfig.pa
     port: dbConfig.port,
     dialect: dbConfig.dialect,
     ssl: {
-        ca: sslCa
+        ca: dbConfig.ssl
     },
     logging: console.log,
     // logging: (...msg) => console.log(msg),
@@ -23,4 +23,4 @@ export const sequelize = new Sequelize(dbConfig.name, dbConfig.user, dbConfig.pa
 });
 
 // Add this to properly manage connections in serverless
-attachDatabasePool(sequelize.connectionManager.pool);
+// attachDatabasePool(sequelize.connectionManager.pool);
