@@ -8,9 +8,11 @@ export const FilterProfile = async (req, res) => {
     let filter = {};
 
     if (!age_group && !gender && !country_id) {
-        return res.status(400).json({
-            status: "error",
-            message: "query param is required"
+        const { count, rows:profile } = await Profile.findAndCountAll({ attributes: ["id", "name", "gender", "age", "age_group", "country_id"] })
+        return res.status(200).json({
+            status: "success",
+            count,
+            data: profile
         })
     }
 
