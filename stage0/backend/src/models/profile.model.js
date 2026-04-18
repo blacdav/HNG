@@ -16,8 +16,7 @@ Profile.init({
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
     gender: {
         type: DataTypes.ENUM("male", "female"),
@@ -52,6 +51,10 @@ Profile.init({
     indexes: [
         {
             fields: ["age_group", "gender", "country_id"]
+        },
+        {
+            unique: true,
+            fields: ["name"]
         }
     ],
     underscored: true,
