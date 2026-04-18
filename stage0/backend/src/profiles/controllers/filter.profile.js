@@ -34,7 +34,7 @@ export const FilterProfile = async (req, res) => {
             attributes: ["id", "name", "gender", "age", "age_group", "country_id"]
         });
 
-        if (!profile) {
+        if (!profile || profile.length === 0) {
             return res.status(404).json({
                 status: "success",
                 message: "Profile not found!"
