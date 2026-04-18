@@ -24,7 +24,7 @@ Profile.init({
         allowNull: false
     },
     gender_probability: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     },
     sample_size: {
@@ -44,7 +44,7 @@ Profile.init({
         allowNull: false
     },
     country_probability: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     }
 }, {
