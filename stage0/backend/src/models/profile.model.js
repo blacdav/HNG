@@ -24,7 +24,7 @@ Profile.init({
         allowNull: false
     },
     gender_probability: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     sample_size: {
