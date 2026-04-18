@@ -67,7 +67,7 @@ export const CreateProfile = async (req, res) => {
             return Profile.create({
                 name: name.toLowerCase(),
                 gender: g.gender.toLowerCase(),
-                gender_probability: g.probability.toLowerCase(),
+                gender_probability: parseInt(g.probability),
                 sample_size: parseInt(g.count),
                 age: parseInt(a.age),
                 age_group: age_group.toLowerCase(),
