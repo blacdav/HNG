@@ -17,7 +17,7 @@ export const GetProfile = async (req, res) => {
 
         if (!profile) {
             return res.status(404).json({
-                status: "success",
+                status: "error",
                 message: "Profile not found!"
             })
         }
