@@ -68,8 +68,8 @@ export const CreateProfile = async (req, res) => {
                 name,
                 gender: g.gender,
                 gender_probability: g.probability,
-                sample_size: g.count,
-                age: a.age,
+                sample_size: parseInt(g.count),
+                age: parseInt(a.age),
                 age_group,
                 country_id: n.country[0].country_id,
                 country_probability

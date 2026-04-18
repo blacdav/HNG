@@ -28,11 +28,11 @@ Profile.init({
         allowNull: false
     },
     sample_size: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     age: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     age_group: {
