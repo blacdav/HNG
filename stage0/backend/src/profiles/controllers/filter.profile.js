@@ -17,15 +17,15 @@ export const FilterProfile = async (req, res) => {
     }
 
     if (typeof age_group === "string" && age_group.trim() !== "") {
-        filter.age_group = age_group;
+        filter.age_group = age_group.toLowerCase();
     }
 
     if (typeof gender === "string" && gender.trim() !== "") {
-        filter.gender = gender;
+        filter.gender = gender.toLowerCase();
     }
 
     if (typeof country_id === "string" && country_id.trim() !== "") {
-        filter.country_id = country_id;
+        filter.country_id = country_id.toUpperCase();
     }
 
     try {

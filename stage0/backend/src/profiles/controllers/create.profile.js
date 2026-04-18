@@ -23,12 +23,12 @@ export const CreateProfile = async (req, res) => {
 
     try {
         // check db if the name exist create or fetch the details.
-        const profile = await Profile.findAll({ where: { name }});
+        const profile = await Profile.findAll({ where: { name: name.toLowerCase() }});
 
         if (profile && profile.length > 0) {
             return res.json({
                 status: "success",
-                message: "profile already exists",
+                message: "Profile already exists",
                 data: profile
             })
         }
@@ -65,14 +65,14 @@ export const CreateProfile = async (req, res) => {
 
         const t = await sequelize.transaction(async t => {
             return Profile.create({
-                name,
-                gender: g.gender,
-                gender_probability: g.probability,
+                name: name.toLowerCase(),
+                gender: g.gender.toLowerCase(),
+                gender_probability: g.probability.toLowerCase(),
                 sample_size: parseInt(g.count),
                 age: parseInt(a.age),
-                age_group,
-                country_id: n.country[0].country_id,
-                country_probability
+                age_group: age_group.toLowerCase(),
+                country_id: n.country[0].country_id.toUpperCase(),
+                country_probability: parseInt(country_probability)
             }, { transaction: t })
         })
 
@@ -82,7 +82,7 @@ export const CreateProfile = async (req, res) => {
         });
     } catch (err) {
         if (err.name === "SequelizeUniqueConstraintError") {
-            const existing = await Profile.findOne({ where: { name } });
+            const existing = await Profile.findOne({ where: { name: name.toLowerCase() } });
 
             return res.status(200).json({
                 status: "success",
