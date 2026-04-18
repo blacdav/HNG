@@ -23,14 +23,23 @@ export const CreateProfile = async (req, res) => {
 
     try {
         // check db if the name exist create or fetch the details.
-        const profile = await Profile.findAll({ where: { name: name.toLowerCase() }});
+        // const profile = await Profile.findAll({ where: { name: name.toLowerCase() }});
 
-        if (profile && profile.length > 0) {
-            return res.json({
+        // if (profile && profile.length > 0) {
+        //     return res.json({
+        //         status: "success",
+        //         message: "Profile already exists",
+        //         data: profile
+        //     })
+        // }
+
+        const existing = await Profile.findOne({ where: { name: name.toLowerCase() } });
+        if (existing) {
+            return res.status(200).json({
                 status: "success",
                 message: "Profile already exists",
-                data: profile
-            })
+                data: existing
+            });
         }
 
         const [g, a, n] = await Promise.all([
@@ -41,22 +50,22 @@ export const CreateProfile = async (req, res) => {
 
         if (!g.gender || g.count === 0) {
             return res.status(502).json({
-                status: "false",
-                message: "Genderize API returned invalid response"
+                status: "error",
+                message: "Genderize returned an invalid response"
             })
         }
 
         if (!a.age) {
             return res.status(502).json({
-                status: "false",
-                message: "Agify API returned invalid response"
+                status: "error",
+                message: "Agify returned an invalid response"
             })
         }
 
         if (!n.country || n.country.length === 0) {
             return res.status(502).json({
-                status: "false",
-                message: "Nationalize API returned invalid response"
+                status: "error",
+                message: "Nationalize returned an invalid response"
             })
         }
 
