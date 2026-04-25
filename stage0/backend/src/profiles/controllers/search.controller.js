@@ -292,8 +292,8 @@ export const SearchProfile = async (req, res) => {
 
     try {
         const { count, rows: results } = await Profile.findAndCountAll({
-            offset,
-            limit: pageLimit,
+            // offset,
+            // limit: pageLimit,
             where,
             order: [[safeSortField, sortOrder]]
         });
