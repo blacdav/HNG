@@ -18,18 +18,16 @@ app.use(express.urlencoded({ extended: true }));
 
 dbConn();
 
-// app.use(async (req, res, next) => {
-//     // const ip = req.ip;
+app.use(async (req, res, next) => {
+    // const ip = req.ip;
 
-//     try {
-//         await dbConn();
-        
-//         // console.log(ip)
-//         return next();
-//     } catch (err) {
-//         return next(err);
-//     }
-// })
+    try {
+        // console.log(ip)
+        return next();
+    } catch (err) {
+        return next(err);
+    }
+})
 
 app.use('/api', router);
 

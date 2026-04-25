@@ -28,7 +28,7 @@ Profile.init({
     },
     sample_size: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     age: {
         type: DataTypes.INTEGER,
@@ -39,6 +39,14 @@ Profile.init({
         allowNull: false
     },
     country_id: {
+        type: DataTypes.STRING(2),
+        allowNull: false,
+        validate: {
+            isAlpha: true,
+            len: [2, 2]
+        }
+    },
+    country_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -50,7 +58,7 @@ Profile.init({
     sequelize,
     indexes: [
         {
-            fields: ["age_group", "gender", "country_id"]
+            fields: ["age_group", "gender", "country_name", "age", "gender_probability", "country_probability"]
         },
         {
             unique: true,
@@ -59,7 +67,7 @@ Profile.init({
     ],
     underscored: true,
     modelName: "Profile",
-    tableName: "profile"
+    tableName: "profiles"
 })
 
 export default Profile;

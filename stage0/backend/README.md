@@ -1,0 +1,509 @@
+# GENDERIZE API
+
+## BASE URL [https://hngproject-zeta.vercel.app](https://hngproject-zeta.vercel.app)
+
+## CLASSIFY
+
+### GET [/api/classify](https://hngproject-zeta.vercel.app/api/classify?name=david)
+
+Classifies a given first name and predicts the likely gender associated with it.
+
+**Method:** GET
+
+---
+
+**Query Parameters**
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `name` | string | Yes | The first name to classify. |
+---
+
+**Example Request**
+
+```
+GET {{baseUrl}}/api/classify?name=david
+
+ ```
+
+---
+
+**Example Response**
+
+``` json
+{
+  "status": "success",
+  "data": {
+    "name": "david",
+    "gender": "male",
+    "probability": 1,
+    "sample_size": 3489607,
+    "is_confident": true,
+    "processed_at": "2026-04-20T12:33:16.790Z"
+  }
+}
+
+ ```
+
+---
+
+**Response Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `status` | string | Indicates whether the request was successful (e.g., `"success"`). |
+| `data.name` | string | The name that was queried. |
+| `data.gender` | string | Predicted gender: `"male"`, `"female"`, or `null` if unknown. |
+| `data.probability` | number | Confidence score of the prediction, between 0 and 1. A value of `1` means 100% confidence. |
+| `data.sample_size` | integer | Number of data samples used to make the prediction. |
+| `data.is_confident` | boolean | Whether the API considers the prediction to be confident. |
+| `data.processed_at` | string | ISO 8601 timestamp of when the request was processed. |
+
+---
+
+**Error Responses**
+
+| Status Code | Meaning | Description |
+| --- | --- | --- |
+| `400 Bad Request` | Missing parameter | The `name` query parameter was not provided. |
+| `422 Unprocessable Entity` | Invalid name | The value provided for `name` could not be processed. |
+| `500 Internal Server Error` | Server error | An unexpected error occurred on the server. |
+
+**Example Error Response**
+
+``` json
+{
+  "status": "error",
+  "error": "Missing 'name' parameter"
+}
+
+ ```
+
+---
+
+## Profiles
+
+### GET [/api/profiles](https://hngproject-zeta.vercel.app/api/profiles)
+
+Retrieves a list of profiles, optionally filtered by gender, country, and age group. If no query parameters are provided, all profiles are returned.
+
+**Method:** GET
+
+---
+
+**Query Parameters**
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `country_id` | string | No | Filter profiles by country using an ISO 3166-1 alpha-2 country code (e.g., `NG` for Nigeria). |
+| `gender` | string | No | Filter profiles by gender. Accepted values: `male`, `female`. |
+| `age_group` | string | No | Filter profiles by age group. Accepted values: `child`, `teenager`, `adult`, `senior`. |
+
+---
+
+**Example Request**
+
+```
+GET {{baseUrl}}/api/profiles?country_id=ng
+
+ ```
+
+---
+
+**Example Response**
+
+``` json
+{
+  "status": "success",
+  "count": 4,
+  "data": [
+    {
+      "id": "019da298-1297-70a8-8d5c-6918c16469a0",
+      "name": "john",
+      "gender": "male",
+      "age": "75",
+      "age_group": "senior",
+      "country_id": "NG"
+    },
+    {
+      "id": "019da298-20b5-74bb-8061-e4781c93c868",
+      "name": "mary",
+      "gender": "female",
+      "age": "73",
+      "age_group": "senior",
+      "country_id": "NG"
+    }
+  ]
+}
+
+ ```
+
+---
+
+**Response Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `status` | string | Indicates whether the request was successful (e.g., `"success"`). |
+| `count` | integer | Total number of profiles returned. |
+| `data` | array | List of profile objects matching the applied filters. |
+| `data[].id` | string | Unique identifier for the profile (UUID). |
+| `data[].name` | string | The first name associated with the profile. |
+| `data[].gender` | string | Gender of the profile: `"male"` or `"female"`. |
+| `data[].age` | number | Age of the individual. |
+| `data[].age_group` | string | Age group category: `"child"`, `"teenager"`, `"adult"`, or `"senior"`. |
+| `data[].country_id` | string | ISO 3166-1 alpha-2 country code associated with the profile. |
+
+---
+
+**Error Responses**
+
+| Status Code | Meaning | Description |
+| --- | --- | --- |
+| `400 Bad Request` | Invalid parameter | One or more query parameters have invalid values. |
+| `500 Internal Server Error` | Server error | An unexpected error occurred on the server. |
+
+**Example Error Response**
+
+``` json
+{
+  "status": "error",
+  "error": "Invalid 'gender' value. Accepted values: male, female."
+}
+
+ ```
+
+### GET [/api/profile/:id](https://hngproject-zeta.vercel.app/api/profiles/)
+
+Retrieves a single profile by its unique identifier.
+
+**Method:** GET
+
+---
+
+**Path Variables**
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `id` | string (UUID) | Yes | The unique identifier of the profile to retrieve. |
+
+---
+
+**Example Request**
+
+```
+GET {{baseUrl}}/api/profiles/019da298-1297-70a8-8d5c-6918c16469a0
+
+ ```
+
+---
+
+**Example Response**
+
+``` json
+{
+  "status": "success",
+  "data": {
+    "id": "019da298-1297-70a8-8d5c-6918c16469a0",
+    "name": "john",
+    "gender": "male",
+    "gender_probability": "1",
+    "sample_size": "2692560",
+    "age": "75",
+    "age_group": "senior",
+    "country_id": "NG",
+    "country_probability": "0.08",
+    "createdAt": "2026-04-18T21:56:08.000Z",
+    "updatedAt": "2026-04-18T21:56:08.000Z"
+  }
+}
+
+ ```
+
+---
+
+**Response Fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `status` | string | Indicates whether the request was successful (e.g., `"success"`). |
+| `data.id` | string | Unique identifier of the profile (UUID). |
+| `data.name` | string | The first name associated with the profile. |
+| `data.gender` | string | Predicted gender: `"male"` or `"female"`. |
+| `data.gender_probability` | number | Confidence score of the gender prediction, between 0 and 1. |
+| `data.sample_size` | number | Number of data samples used for the gender prediction. |
+| `data.age` | string | Age of the individual. |
+| `data.age_group` | string | Age group category: `"child"`, `"teenager"`, `"adult"`, or `"senior"`. |
+| `data.country_id` | string | ISO 3166-1 alpha-2 country code associated with the profile. |
+| `data.country_probability` | number | Confidence score of the country prediction, between 0 and 1. |
+| `data.createdAt` | string | ISO 8601 timestamp of when the profile was created. |
+| `data.updatedAt` | string | ISO 8601 timestamp of when the profile was last updated. |
+
+---
+
+**Error Responses**
+
+| Status Code | Meaning | Description |
+| --- | --- | --- |
+| `404 Not Found` | Profile not found | No profile exists for the given `id`. |
+| `500 Internal Server Error` | Server error | An unexpected error occurred on the server. |
+
+**Example Error Response**
+
+``` json
+{
+  "status": "error",
+  "message": "Profile not found!"
+}
+
+ ```
+
+### POST [/api/profiles](https://hngproject-zeta.vercel.app/api/profiles)
+
+Creates a new gender profile for a given name. The API analyzes the name and returns predicted gender, age, and country of origin data, storing the result as a profile.
+
+## Request
+
+**Method & Path:** `POST {{baseUrl}}/api/profiles`
+
+**Headers:**
+
+| Header | Value |
+| --- | --- |
+| `Content-Type` | `application/json` |
+
+**Body (JSON):**
+
+``` json
+{
+  "name": "Ferdinard"
+}
+
+ ```
+
+**Body Fields:**
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `name` | `string` | ✅ Yes | The name to generate a gender profile for. |
+
+---
+
+## Response
+
+**HTTP 201 Created**
+
+Returns a success status along with the newly created profile object containing predicted gender, age, and country of origin data derived from the provided name.
+
+**Example Response:**
+
+``` json
+{
+  "status": "success",
+  "data": {
+    "id": "019dac0c-1698-72db-9e6a-5d35f5376767",
+    "name": "ferdinard",
+    "gender": "male",
+    "gender_probability": 0.94,
+    "sample_size": 157,
+    "age": 44,
+    "age_group": "adult",
+    "country_id": "NG",
+    "country_probability": 0.18,
+    "updatedAt": "2026-04-20T17:59:26.617Z",
+    "createdAt": "2026-04-20T17:59:26.617Z"
+  }
+}
+
+ ```
+
+**Response** **`data`** **Fields:**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `string` (UUID) | Unique identifier for the created profile. |
+| `name` | `string` | The normalized (lowercased) version of the submitted name. |
+| `gender` | `string` | Predicted gender for the name (e.g. `"male"`, `"female"`). |
+| `gender_probability` | `number` | Confidence score for the gender prediction, between `0` and `1`. |
+| `sample_size` | `integer` | Number of data samples used to determine the gender prediction. |
+| `age` | `integer` | Predicted average age associated with the name. |
+| `age_group` | `string` | Age group classification (e.g. `"adult"`, `"senior"`, `"young"`). |
+| `country_id` | `string` | ISO 3166-1 alpha-2 country code of the most likely country of origin. |
+| `country_probability` | `number` | Confidence score for the country prediction, between `0` and `1`. |
+| `createdAt` | `string` (ISO 8601) | Timestamp indicating when the profile was created. |
+| `updatedAt` | `string` (ISO 8601) | Timestamp indicating when the profile was last updated. |
+
+### DELETE [/api/profiles/:id](https://hngproject-zeta.vercel.app/api/profiles)
+
+Deletes an existing profile by its unique ID. If the profile is found, it is permanently removed and no response body is returned. If no profile exists with the given ID, a `404 Not Found` error is returned.
+
+## Request
+
+**`DELETE {{baseUrl}}/api/profiles/:id`**
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `id` | string | Yes | The unique ID of the profile to delete |
+
+---
+
+## Responses
+
+### 204 No Content
+
+The profile was successfully deleted. No response body is returned.
+
+---
+
+### 404 Not Found
+
+No profile with the specified ID was found.
+
+``` json
+{
+  "status": "error",
+  "message": "Profile not found!"
+}
+
+ ```
+
+#### Error Response Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `status` | string | Indicates the result — `"error"` |
+| `message` | string | Human-readable description of the error |
+
+### Search Profiles
+
+Search for genderized profiles matching a natural-language query. The endpoint interprets descriptors such as gender, age range, age group, and country from the `q` parameter and returns matching profiles with probability scores.
+
+#### Endpoint
+
+`GET {{baseUrl}}/api/profiles/search`
+
+#### Query Parameters
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `q` | string | Yes | Natural-language search query (e.g. `male and female teen above 17 in nigeria`). Must be a non-empty string. |
+| `page` | integer | No | Page number of results. Non-integer or out-of-range values are currently tolerated by the server. |
+| `limit` | integer | No | Maximum number of profiles per page. Non-integer or negative values are currently tolerated by the server. |
+
+#### Example Request
+
+```
+GET {{baseUrl}}/api/profiles/search?q=male and female teen above 17 in nigeria
+
+ ```
+
+#### Responses
+
+#### 200 OK — Success
+
+``` json
+{
+  "status": "success",
+  "count": 8,
+  "data": [
+    {
+      "id": "019dbf75-0478-724b-9113-64527bc84379",
+      "name": "Moussa Segla",
+      "gender": "male",
+      "gender_probability": 0.8,
+      "sample_size": null,
+      "age": 19,
+      "age_group": "teenager",
+      "country_id": "NG",
+      "country_name": "Nigeria",
+      "country_probability": 0.56,
+      "createdAt": "2026-04-24T12:26:50.000Z",
+      "updatedAt": "2026-04-24T12:26:50.000Z"
+    },
+    {
+      "id": "019dbf75-0479-71fd-a2d7-b47186f6c8c1",
+      "name": "Joseph Chukwu",
+      "gender": "male",
+      "gender_probability": 0.93,
+      "sample_size": null,
+      "age": 18,
+      "age_group": "teenager",
+      "country_id": "NG",
+      "country_name": "Nigeria",
+      "country_probability": 0.16,
+      "createdAt": "2026-04-24T12:26:50.000Z",
+      "updatedAt": "2026-04-24T12:26:50.000Z"
+    }
+  ]
+}
+
+ ```
+
+#### 200 OK — No Matches
+
+When no profiles match the query, the response is still `200 OK` with an empty `data` array.
+
+``` json
+{
+  "status": "success",
+  "count": 0,
+  "data": []
+}
+
+ ```
+
+#### 400 Bad Request — Missing or Empty `q`
+
+Returned when `q` is absent or an empty string.
+
+``` json
+{
+  "status": "error",
+  "message": "Query parameter 'q' is required and must be a non-empty string"
+}
+
+ ```
+
+#### Response Fields (Success)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `status` | string | Request status, `success` on 2xx responses. |
+| `count` | integer | Number of profiles returned in `data`. |
+| `data` | array | Array of matching profile objects (empty if no matches). |
+
+#### Profile Object
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | string (UUID) | Unique profile identifier. |
+| `name` | string | Full name of the profile. |
+| `gender` | string | Predicted gender (`male` / `female`). |
+| `gender_probability` | number | Confidence score for gender prediction (0–1). |
+| `sample_size` | integer | null | Sample size used to infer gender, if available. |
+| `age` | integer | Predicted age in years. |
+| `age_group` | string | Age group classification (e.g. `teenager`). |
+| `country_id` | string | ISO country code (e.g. `NG`). |
+| `country_name` | string | Country name. |
+| `country_probability` | number | Confidence score for country prediction (0–1). |
+| `createdAt` | string (ISO 8601) | When the profile was created. |
+| `updatedAt` | string (ISO 8601) | When the profile was last updated. |
+
+#### Error Response Shape
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `status` | string | `"error"` on error responses. |
+| `message` | string | Human-readable description of the error. |
+
+#### Notes
+
+- The `q` parameter is free-form natural language; the API parses gender, age, age group, and country cues.
+    
+- Probability fields (`gender_probability`, `country_probability`) range from `0` to `1`.
+    
+- `sample_size` may be `null` when the underlying dataset size is not reported.
+    
+- `page` and `limit` are currently permissive: non-numeric or negative values do not trigger a 400 and results are still returned. Prefer positive integers for predictable pagination.
