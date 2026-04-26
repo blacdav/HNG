@@ -300,7 +300,9 @@ export const SearchProfile = async (req, res) => {
 
         return res.json({
             status: "success",
-            count,
+            page,
+            limit,
+            total: Math.ceil(count / limit),
             data: results
         });
     } catch (err) {

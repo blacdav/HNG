@@ -130,7 +130,9 @@ export const FilterProfile = async (req, res) => {
 
         return res.status(200).json({
             status: "success",
-            count,
+            page,
+            limit,
+            total: Math.ceil(count / limit),
             data: profiles
         });
 
