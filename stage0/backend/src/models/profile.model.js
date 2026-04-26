@@ -58,7 +58,7 @@ Profile.init({
     sequelize,
     indexes: [
         {
-            fields: ["age_group", "gender", "country_name", "age", "gender_probability", "country_probability"]
+            fields: ["age_group", "gender", "country_name", "age"]
         },
         {
             unique: true,

@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import router from "./routes/routes.js";
 import { dbConn } from "./db/config.js";
 
@@ -12,7 +13,8 @@ app.use(cors({
     credentials: true
 }));
 
-// app.use(express.static("public"));
+app.use(cookieParser());
+app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -41,8 +43,8 @@ app.use((err, req, res, next) => {
 })
 
 // removing app.listen because of vercel
-// app.listen(8000, () => {
-//   console.log("Server is running on port 8000");
-// });
+app.listen(8000, () => {
+  console.log("Server is running on port 8000");
+});
 
-export default app;
+// export default app;
