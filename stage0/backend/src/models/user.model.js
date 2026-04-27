@@ -2,8 +2,13 @@ import { sequelize } from "../db/index.js";
 import { DataTypes, Model } from "sequelize";
 import { v7 as uuidv7 } from "uuid";
 
-class User extends Model {
-    static associate(model) {}
+export default class User extends Model {
+    static associate(model) {
+        this.hasMany(model.RefreshToken, {
+            foreignKey: "user_id",
+            as: "refresh_tokens"
+        });
+    }
 }
 
 User.init({
@@ -44,7 +49,7 @@ User.init({
         defaultValue: "analyst",
         validate: {
             isIn: {
-                args: ["admin", "analyst"],
+                args: [["admin", "analyst"]],
                 msg: "role can either be admin or analyst"
             }
         }
@@ -52,7 +57,7 @@ User.init({
     is_active: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: false
+        defaultValue: true
     },
     last_login_at: {
         type: DataTypes.DATE,
@@ -60,10 +65,6 @@ User.init({
         validate: {
             isDate: {
                 msg: "last login must be a valid date"
-            },
-            isBefore: {
-                args: [new Date()],
-                msg: "Last Login must be in the past"
             }
         }
     }
@@ -80,6 +81,4 @@ User.init({
             fields: ["github_id", "email"]
         }
     ]
-})
-
-export default User;
+});

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { GithubAuth } from "../github/controllers/web.js";
-import { GhCallbackAuth } from "../github/controllers/gh_callback.js";
+import { GhCallbackAuth, GhDeviceCallbackAuth } from "../github/controllers/gh_callback.js";
 import { RefreshAuth } from "../refresh.auth.js";
 import { GitHubDeviceAuth } from "../github/controllers/device.js";
 
@@ -11,7 +11,7 @@ router.get('/github/callback', GhCallbackAuth);
 router.post('/refresh', RefreshAuth);
 // router.post('/logout', LogoutAuth);
 router.get('/github/device', GitHubDeviceAuth);
-router.get('/github/device/callback', GitHubDeviceAuth);
+router.get('/github/device/callback', GhDeviceCallbackAuth);
 // router.post('/logout', LogoutAuth);
 
 export default router;

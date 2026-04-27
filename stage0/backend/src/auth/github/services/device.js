@@ -38,7 +38,7 @@ export default class GitHubDeviceServices {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
-                    "Content-Type": "x-www-form-urlencoded"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     client_id: this.client_id,

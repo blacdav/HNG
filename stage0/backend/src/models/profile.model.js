@@ -2,7 +2,7 @@ import { sequelize } from "../db/index.js";
 import { DataTypes, Model } from "sequelize";
 import { v7 as uuidv7 } from "uuid";
 
-class Profile extends Model {
+export default class Profile extends Model {
     static associate(models) {}
 }
 
@@ -68,6 +68,4 @@ Profile.init({
     underscored: true,
     modelName: "Profile",
     tableName: "profiles"
-})
-
-export default Profile;
+});
