@@ -45,11 +45,13 @@ export const GhCallbackAuth = async (req, res) => {
 
         res.cookie("refresh_token", refresh_token, { httpOnly: true, secure: false, sameSite: "strict" });
 
-        return res.status(200).json({
-            status: "success",
-            message: "User authenticated successfully",
-            data: user
-        });
+        // return res.status(200).json({
+        //     status: "success",
+        //     message: "User authenticated successfully",
+        //     data: user
+        // });
+
+        return res.redirect("http://localhost:5173")
     } catch (err) {
         console.log("err object", err);
         throw err;

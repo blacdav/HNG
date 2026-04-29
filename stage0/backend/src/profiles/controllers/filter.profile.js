@@ -37,8 +37,8 @@ export const FilterProfile = async (req, res) => {
         // If no filters, return all profiles with pagination
         if (!hasFilters) {
             const { count, rows: profiles } = await Profile.findAndCountAll({
-                // offset,
-                // limit: limitNum,
+                offset,
+                limit: limitNum,
                 order: [[safeSortBy, safeOrder]]
             });
 
