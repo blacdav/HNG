@@ -9,7 +9,7 @@ import { CheckAuthUser } from "../../middlewares/auth.middleware.js";
 const router = Router();
 
 router.get('/github', GithubAuth);
-router.get('/github/callback', GhCallbackAuth);
+router.get('/github/callback', GhCallbackAuth); // to be called by github server
 router.post('/refresh', RefreshAuth);
 // router.post('/logout', LogoutAuth);
 router.get('/github/device', GitHubDeviceAuth);

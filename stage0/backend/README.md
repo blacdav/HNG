@@ -507,3 +507,212 @@ Returned when `q` is absent or an empty string.
 - `sample_size` may be `null` when the underlying dataset size is not reported.
     
 - `page` and `limit` are currently permissive: non-numeric or negative values do not trigger a 400 and results are still returned. Prefer positive integers for predictable pagination.
+
+---
+
+## AUTH
+
+---
+
+### GitHub OAuth Authentication
+
+Initiates the GitHub OAuth 2.0 authentication flow. When a user hits this endpoint, they will be redirected to GitHub to authorize the application. After successful authorization, GitHub will redirect back to the configured callback URL with an authorization code.
+
+### Endpoint
+
+`GET {{baseUrl}}/api/auth/github`
+
+### Description
+
+This endpoint starts the "Sign in with GitHub" flow. It does not return a JSON response directly — instead, it issues an HTTP redirect (302) to GitHub's OAuth authorization page, where the user can grant the application access to their GitHub account.
+
+### Request
+
+#### Method
+
+`GET`
+
+#### Headers
+
+No custom headers are required.
+
+#### Query Parameters
+
+None required. The server handles the OAuth parameters (`client_id`, `redirect_uri`, `scope`, `state`) internally.
+
+#### Body
+
+None. This is a GET request.
+
+### Authentication
+
+No authentication is required to call this endpoint — this is the entry point to authenticate the user.
+
+## Response
+
+#### Success (302 Found)
+
+On success, the server responds with a redirect to GitHub:
+
+```
+HTTP/1.1 302 Found
+Location: https://github.com/login/oauth/authorize?client_id=...&redirect_uri=...&scope=...&state=...
+
+ ```
+
+#### Flow after redirect
+
+1. The user authenticates on GitHub and authorizes the app.
+    
+2. GitHub redirects to the application's callback URL (see the `github callback` request) with a `code` query parameter.
+    
+3. The callback endpoint exchanges the `code` for an access token and creates/logs in the user.
+    
+
+#### Errors
+
+| Status | Meaning |
+| --- | --- |
+| 500 | Server misconfiguration (missing GitHub OAuth credentials). |
+| 503 | Upstream GitHub service unavailable. |
+
+#### Notes
+
+- Open this URL in a browser rather than a REST client to complete the flow end-to-end — REST clients typically cannot follow the interactive login on GitHub.
+    
+- Ensure the environment variable `baseUrl` is set to the correct API host.
+    
+- The related callback request is `github callback`.
+
+---
+
+## GitHub OAuth Callback
+
+`GET {{baseUrl}}/api/auth/github/callback`
+
+Handles the OAuth 2.0 callback from GitHub after a user authorizes the application. GitHub redirects the user to this endpoint with an authorization `code` and a `state` parameter, which the server exchanges for an access token and uses to create or update the user's Genderized profile session.
+
+### How it works
+
+1. The user initiates the GitHub OAuth flow from the client application.
+    
+2. GitHub redirects to this callback URL with `code` and `state` query parameters.
+    
+3. The server validates the `state` parameter to prevent CSRF attacks.
+    
+4. The server exchanges the `code` for an access token with GitHub.
+    
+5. The server fetches the user's GitHub profile and creates/updates the Genderized profile.
+    
+6. A session token or redirect response is returned to the client.
+    
+
+### Query Parameters
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `code` | string | Yes | Authorization code returned by GitHub after the user approves the OAuth request. |
+| `state` | string | Yes | Opaque value used to maintain state between the request and callback. Must match the value originally sent to GitHub to prevent CSRF. |
+
+### Responses
+
+#### 200 OK
+
+Authentication succeeded. The response typically contains a session token or triggers a redirect to the application.
+
+#### 400 Bad Request
+
+Returned when the `state` parameter is missing, expired, or does not match the expected value.
+
+``` json
+{
+  "status": "error",
+  "message": "Invalid state parameter"
+}
+
+ ```
+
+#### 401 Unauthorized
+
+Returned when the authorization `code` is invalid or GitHub rejects the token exchange.
+
+### Notes
+
+- This endpoint is typically not called directly by clients — it is invoked by GitHub as part of the OAuth redirect flow.
+    
+- Ensure the redirect URI configured in your GitHub OAuth App matches this endpoint exactly.
+    
+- The `state` value should be generated server-side and stored (e.g., in a session or signed cookie) before starting the OAuth flow.
+
+
+---
+
+## Get Current Authenticated User
+
+Returns information about the currently authenticated user based on the authorization token provided in the request.
+
+### Endpoint
+
+`GET {{baseUrl}}/api/auth/me`
+
+### Authentication
+
+This endpoint requires a valid authorization token. The token must be sent in the `Authorization` header using the Bearer scheme:
+
+```
+Authorization: Bearer <your_token>
+
+ ```
+
+If the token is missing or invalid, the API will respond with a `400` status and an error message: `Authorization Token Required`.
+
+### Request
+
+- **Method:** `GET`
+    
+- **URL:** `{{baseUrl}}/api/auth/me`
+    
+- **Headers:**
+    
+    - `Authorization: Bearer` (required)
+        
+
+No request body or query parameters are needed.
+
+### Responses
+
+#### 200 OK
+
+Returns the profile of the authenticated user.
+
+``` json
+{
+  "success": true,
+  "data": {
+    "id": "string",
+    "name": "string",
+    "email": "string"
+  }
+}
+
+ ```
+
+#### 400 Bad Request
+
+Returned when the authorization token is missing.
+
+``` json
+{
+  "success": false,
+  "message": "Authorization Token Required"
+}
+
+ ```
+
+#### 401 Unauthorized
+
+Returned when the token is invalid or expired.
+
+### Usage
+
+Use this endpoint to verify a user's session and retrieve their profile information after logging in (e.g., via the GitHub OAuth callback flow).
