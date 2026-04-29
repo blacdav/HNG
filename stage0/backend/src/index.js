@@ -11,7 +11,7 @@ const logger = morgan("dev");
 app.use(cors({
     origin: "*",
     methods: ["POST", "GET", "DELETE"],
-    allowedHeaders: ["Content-Type", "x-client-type"],
+    allowedHeaders: ["Content-Type", "Cookie", "x-client-type"],
     credentials: true
 }));
 
