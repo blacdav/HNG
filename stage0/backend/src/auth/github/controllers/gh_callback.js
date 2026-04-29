@@ -11,7 +11,7 @@ export const GhCallbackAuth = async (req, res) => {
     // exchanges it for access and refresh tokens, 
     // creates user in db if not exists, and returns tokens to client
 
-    const { code, state } = req.body;
+    const { code, state } = req.query;
 
     // Verify the state parameter to prevent CSRF attacks
     const storedState = req.cookies.gh_oauth_state;
