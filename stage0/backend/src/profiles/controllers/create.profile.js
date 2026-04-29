@@ -87,6 +87,7 @@ export const CreateProfile = async (req, res) => {
 
         return res.status(201).json({
             status: "success",
+            message: `Profile Created for ${t.name}`,
             data: t
         });
     } catch (err) {

@@ -10,6 +10,7 @@ const router = Router();
 router.post('/', CreateProfile);
 router.get('/', FilterProfile);
 router.get('/search', SearchProfile);
+// router.get('/export', );
 router.get('/:id', GetProfile);
 router.delete('/:id', DeleteProfile);
 

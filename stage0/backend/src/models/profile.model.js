@@ -48,7 +48,7 @@ Profile.init({
     },
     country_name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     country_probability: {
         type: DataTypes.FLOAT,

@@ -11,7 +11,7 @@ export const GhCallbackAuth = async (req, res) => {
     // exchanges it for access and refresh tokens, 
     // creates user in db if not exists, and returns tokens to client
 
-    const { code, state } = req.query || req.body;
+    const { code, state } = req.body;
 
     // Verify the state parameter to prevent CSRF attacks
     const storedState = req.cookies.gh_oauth_state;
@@ -42,13 +42,18 @@ export const GhCallbackAuth = async (req, res) => {
         });
 
         const access_token = await TokenService.genAccessToken({ github_id: user_info.id, role: user.role });
+
         const refresh_token = await TokenService.genRefreshToken({ github_id: user_info.id });
 
-        res.cookie("access_token", access_token, { httpOnly: true, secure: true, sameSite: "strict" });
+        res.cookie("access_token", access_token, { httpOnly: true, secure: false, sameSite: "strict" });
 
-        res.cookie("refresh_token", refresh_token, { httpOnly: true, secure: true, sameSite: "strict" });
+        res.cookie("refresh_token", refresh_token, { httpOnly: true, secure: false, sameSite: "strict" });
 
-        return res.json({ data: user });
+        return res.status(200).json({
+            status: "success",
+            message: "User authenticated successfully",
+            data: user
+        });
     } catch (err) {
         console.log("err object", err);
         throw err;
@@ -56,9 +61,7 @@ export const GhCallbackAuth = async (req, res) => {
 }
 
 export const GhDeviceCallbackAuth = async (req, res) => {
-    // this controller will handle the callback for the device flow
-    // it will exchange the device code for an access token, and return it to the client
-    const { device_code } = req.query || req.body;
+    const { device_code } = req.body;
 
     if (!device_code) {
         return res.status(400).json({
@@ -71,8 +74,8 @@ export const GhDeviceCallbackAuth = async (req, res) => {
         const tokenResponse = await GitHubDeviceServices.getTokenForDevice(device_code);
         if (tokenResponse.error) {
             return res.status(400).json({
-                status: "error",
-                message: tokenResponse.error_description || "Error exchanging device code for token"
+                status: `${tokenResponse.error}`,
+                message: tokenResponse.error_description
             });
         }
 
@@ -95,9 +98,9 @@ export const GhDeviceCallbackAuth = async (req, res) => {
         const access_token = await TokenService.genAccessToken({ github_id: user_info.id, role: user.role });
         const refresh_token = await TokenService.genRefreshToken({ github_id: user_info.id });
 
-        return res.json({
+        return res.status(200).json({
             status: "success",
-            message: "Device code exchanged for token successfully",
+            message: "User Authenticated successfully",
             data: user,
             tokens: {
                 access_token,

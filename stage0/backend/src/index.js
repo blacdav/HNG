@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 import router from "./routes/routes.js";
 import { dbConn } from "./db/config.js";
 
 const app = express();
+const logger = morgan("dev");
 
 app.use(cors({
     origin: "*",
@@ -13,6 +15,7 @@ app.use(cors({
     credentials: true
 }));
 
+app.use(logger)
 app.use(cookieParser());
 app.use(express.static("public"));
 app.use(express.json());

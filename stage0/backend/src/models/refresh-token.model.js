@@ -19,7 +19,12 @@ RefreshToken.init({
     },
     user_id: {
         type: DataTypes.UUID,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            isUUID: {
+                msg: "user_id must be a valid UUID"
+            }
+        }
     },
     version: {
         type: DataTypes.INTEGER,
@@ -33,7 +38,11 @@ RefreshToken.init({
     expires_at: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {}
+        validate: {
+            isDate: {
+                msg: "expires_at must be a valid date string"
+            }
+        }
     }
 }, {
     sequelize,

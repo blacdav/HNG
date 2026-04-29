@@ -132,7 +132,11 @@ export const FilterProfile = async (req, res) => {
             status: "success",
             page,
             limit,
-            total: Math.ceil(count / limit),
+            total: count,
+            total_pages: Math.ceil(count / limit),
+            links: {
+                self: req.url
+            },
             data: profiles
         });
 

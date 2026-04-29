@@ -1,21 +1,30 @@
 import jwt from "jsonwebtoken";
 
 export default class TokenService {
-    // Service methods for handling GitHub tokens
     static {
         this.access = "gh_access_token";
         this.refresh = "gh_refresh_token";
     }
 
-    static genAccessToken(payload, expiresIn = "3mins") {
-        return jwt.sign(payload, this.access, { expiresIn });
+    static async genAccessToken(payload) {
+        try {
+            return jwt.sign(payload, this.access, { expiresIn: "3d" });
+        } catch (err) {
+            console.log("Error generating access token", err);
+            throw err;
+        }
     }
 
-    static genRefreshToken(payload, expiresIn = "5mins") {
-        return jwt.sign(payload, this.refresh, { expiresIn });
+    static async genRefreshToken(payload) {
+        try {
+            return jwt.sign(payload, this.refresh, { expiresIn: "5m" });
+        } catch(err) {
+            console.log("Error generating refresh token", err);
+            throw err;
+        }
     }
 
-    static verifyAccessToken(token) {
+    static async verifyAccessToken(token) {
         try {
             return jwt.verify(token, this.access);
         } catch (err) {
@@ -24,7 +33,7 @@ export default class TokenService {
         }
     }
 
-    static verifyRefreshToken(token) {
+    static async verifyRefreshToken(token) {
         try {
             return jwt.verify(token, this.refresh);
         } catch (err) {
@@ -32,4 +41,4 @@ export default class TokenService {
             throw err;
         }
     }
-}
+};
